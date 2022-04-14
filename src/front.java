@@ -11,17 +11,17 @@ public class front{
     JLabel l1 = new JLabel("");
     // Adding Buttons
     JButton button = new JButton();
+    MyButton [] arrayLabels = new MyButton[64];
     front(){
         panel.setLayout( new GridLayout(8,8) ); // Setting the number of boxes
         visual.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Program should not run in background after exit
         visual.setTitle("Reversi"); // Name of Application
         visual.setVisible(true);
     }
-    public void boxes(MyButton [] arrayLabels){ // Creating GUI
+    public void boxes(){ // Creating GUI
         for(int i=0;i<64;i++){
             // Creating boxes, setting colour and size
             MyButton myButton = new MyButton();
-
             myButton.setBackground(Color.GREEN);
             myButton.setSize(100,100);
 
@@ -51,17 +51,53 @@ public class front{
         visual.setSize(800,800);
         visual.setVisible(true);
     }
-    public void initalisation(){
-
-
+    public void initalisation(front first,front second){
+        for(int i = 0; i<64; i++){
+            int finalI = i;
+            int finalI1 = i;
+            first.arrayLabels[i].addActionListener(e-> {
+                if (first.l1.getText() != " White player - click to put piece" ){
+                    JOptionPane.showMessageDialog(first.visual,"Await your turn");
+                    System.out.println(1);
+                }
+                else{
+                    arrayLabels[finalI1].isClicked = true;
+                    arrayLabels[finalI1].col = Color.BLACK;
+                    System.out.println("Button Pressed First "+finalI);
+                    arrayLabels[finalI1].repaint();
+                }
+            });
+            second.arrayLabels[i].addActionListener(e-> {
+                if (second.l1.getText() != " White player - click to put piece" ){
+                    JOptionPane.showMessageDialog(second.visual,"Await your turn");
+                    System.out.println(2);
+                }
+                else{
+                    arrayLabels[finalI1].isClicked = true;
+                    arrayLabels[finalI1].col = Color.BLACK;
+                    System.out.println("Button Pressed First "+finalI);
+                    arrayLabels[finalI1].repaint();
+                }
+            });
+        }
     }
     public static void main(String args[]){
-        MyButton[] arrayLabels = new MyButton[64];
-        two second = new two();
-        second.manipulate(arrayLabels);
-        one first = new one();
-        first.manipulate(arrayLabels);
+        front first = new front();
+        // Is it the players turn?
+        int state = 0;
+        // Creation of button
+        first.button = new JButton("Greedy AI (play white)");
+        // Label telling user whether it is their turn
+        first.l1 = new JLabel(" White player - click to put piece");
+        first.boxes();
 
+
+        front second = new front();
+        second.button = new JButton("Greedy AI (play black)");
+        second.l1 = new JLabel(" Black player - not your turn");
+        second.boxes();
+
+        first.initalisation(first,second);
 
     }
 }

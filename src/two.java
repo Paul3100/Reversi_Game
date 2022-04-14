@@ -9,7 +9,7 @@ public class two extends front {
 
         second.button = new JButton("Greedy AI (play black)");
         second.l1 = new JLabel(" Black player - not your turn");
-        second.boxes(arrayLabels);
+
 
         for(int i = 0; i<64; i++){
             int finalI = i;
