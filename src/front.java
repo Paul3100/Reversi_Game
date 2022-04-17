@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.print.DocFlavor;
 import javax.swing.*;
 
 public class front{
@@ -12,6 +14,7 @@ public class front{
     // Adding Buttons
     JButton button = new JButton();
     MyButton [] arrayLabels = new MyButton[64];
+    String myText = "First";
     front(){
         panel.setLayout( new GridLayout(8,8) ); // Setting the number of boxes
         visual.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Program should not run in background after exit
@@ -52,30 +55,38 @@ public class front{
         visual.setVisible(true);
     }
     public void initalisation(front first,front second){
+        one check = new one();
         for(int i = 0; i<64; i++){
-            int finalI = i;
             int finalI1 = i;
             first.arrayLabels[i].addActionListener(e-> {
                 if (first.l1.getText() != " White player - click to put piece" ){
                     JOptionPane.showMessageDialog(first.visual,"Await your turn");
                     System.out.println(1);
                 }
-                else{
-                    arrayLabels[finalI1].isClicked = true;
-                    arrayLabels[finalI1].col = Color.BLACK;
-                    System.out.println("Button Pressed First "+finalI);
-                    arrayLabels[finalI1].repaint();
+                if (first.l1.getText() == " White player - click to put piece"&& arrayLabels[finalI1].col == null){
+                    ArrayList<Integer> arr = check.manipulate(arrayLabels,finalI1);
+                    // There are elements to capture
+                    if(arr.size() != 0) {
+                        arrayLabels[finalI1].isClicked = true;
+                        arrayLabels[finalI1].col = Color.WHITE;
+                        arrayLabels[finalI1].repaint();
+                        System.out.println(check.manipulate(arrayLabels,finalI1));
+                        for (int xi = 0; xi < arr.size(); xi++) {
+                            arrayLabels[arr.get(xi)].isClicked = true;
+                            arrayLabels[arr.get(xi)].col = Color.WHITE;
+                            arrayLabels[arr.get(xi)].repaint();
+                        }
+                    }
                 }
             });
             second.arrayLabels[i].addActionListener(e-> {
-                if (second.l1.getText() != " White player - click to put piece" ){
+                if (second.l1.getText() != " Black player - click to put piece" && myText == "Second"){
                     JOptionPane.showMessageDialog(second.visual,"Await your turn");
-                    System.out.println(2);
+
                 }
-                else{
+                if(second.l1.getText() == " Black player - click to put piece" ){
                     arrayLabels[finalI1].isClicked = true;
                     arrayLabels[finalI1].col = Color.BLACK;
-                    System.out.println("Button Pressed First "+finalI);
                     arrayLabels[finalI1].repaint();
                 }
             });
@@ -98,7 +109,8 @@ public class front{
         second.boxes();
 
         first.initalisation(first,second);
-
+        second.initalisation(first,second);
+        second.myText = "Second";
     }
 }
 
