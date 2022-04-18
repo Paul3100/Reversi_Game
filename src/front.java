@@ -15,10 +15,10 @@ public class front{
     JButton button = new JButton();
     MyButton [] arrayLabels = new MyButton[64];
     String myText = "First";
-    front(){
+    front(String title){
         panel.setLayout( new GridLayout(8,8) ); // Setting the number of boxes
         visual.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Program should not run in background after exit
-        visual.setTitle("Reversi"); // Name of Application
+        visual.setTitle(title); // Name of Application
         visual.setVisible(true);
     }
     public void boxes(){ // Creating GUI
@@ -46,6 +46,7 @@ public class front{
         arrayLabels[35].col = Color.BLACK;
         arrayLabels[35].repaint();
 
+
         button.setFont(new Font("Ariel", Font.BOLD, 60));
         visual.add(l1,BorderLayout.NORTH);
         visual.add(panel, BorderLayout.CENTER );
@@ -56,57 +57,124 @@ public class front{
     }
     public void initalisation(front first,front second){
         one check = new one();
+        two check2 = new two();
         for(int i = 0; i<64; i++){
             int finalI1 = i;
-            first.arrayLabels[i].addActionListener(e-> {
-                if (first.l1.getText() != " White player - click to put piece" ){
-                    JOptionPane.showMessageDialog(first.visual,"Await your turn");
-                    System.out.println(1);
-                }
-                if (first.l1.getText() == " White player - click to put piece"&& arrayLabels[finalI1].col == null){
-                    ArrayList<Integer> arr = check.manipulate(arrayLabels,finalI1);
-                    // There are elements to capture
-                    if(arr.size() != 0) {
-                        arrayLabels[finalI1].isClicked = true;
-                        arrayLabels[finalI1].col = Color.WHITE;
-                        arrayLabels[finalI1].repaint();
-                        System.out.println(check.manipulate(arrayLabels,finalI1));
-                        for (int xi = 0; xi < arr.size(); xi++) {
-                            arrayLabels[arr.get(xi)].isClicked = true;
-                            arrayLabels[arr.get(xi)].col = Color.WHITE;
-                            arrayLabels[arr.get(xi)].repaint();
+            first.arrayLabels[i].addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    Thread t = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (first.l1.getText() != " White player - click to put piece" ){
+                                JOptionPane.showMessageDialog(first.visual,"Await your turn");
+                            }
+                            if (first.l1.getText() == " White player - click to put piece"&& arrayLabels[finalI1].col == null){
+                                ArrayList<Integer> arr = check.manipulate(first.arrayLabels,finalI1);
+                                // There are elements to capture
+                                if(arr.size() != 0) {
+                                    arrayLabels[finalI1].isClicked = true;
+                                    arrayLabels[finalI1].col = Color.WHITE;
+                                    arrayLabels[finalI1].repaint();
+                                    for (int xi = 0; xi < arr.size(); xi++) {
+                                        arrayLabels[arr.get(xi)].isClicked = true;
+                                        arrayLabels[arr.get(xi)].col = Color.WHITE;
+                                        arrayLabels[arr.get(xi)].repaint();
+                                    }
+                                    // Move only valid if piece captured
+                                    Thread thread = new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            first.l1.setText(" White player - not your turn");
+                                            second.l1.setText(" Black player - click to put piece");
+                                        }
+                                    });
+                                    thread.start();
+
+                                }
+                                // Making second window 180 degrees
+                                int count = 0;
+                                for(int x2 = 63; x2>=0;x2--){
+                                    second.arrayLabels[count].isClicked = first.arrayLabels[x2].isClicked;
+                                    second.arrayLabels[count].col = first.arrayLabels[x2].col;
+                                    second.arrayLabels[count].repaint();
+                                    count++;
+                                }
+
+
+                            }
+
                         }
-                    }
+                    });
+                    t.start();
                 }
             });
-            second.arrayLabels[i].addActionListener(e-> {
-                if (second.l1.getText() != " Black player - click to put piece" && myText == "Second"){
-                    JOptionPane.showMessageDialog(second.visual,"Await your turn");
 
-                }
-                if(second.l1.getText() == " Black player - click to put piece" ){
-                    arrayLabels[finalI1].isClicked = true;
-                    arrayLabels[finalI1].col = Color.BLACK;
-                    arrayLabels[finalI1].repaint();
+            second.arrayLabels[i].addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    Thread sec = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (second.l1.getText() != " Black player - click to put piece"){
+                                JOptionPane.showMessageDialog(second.visual,"Await your turn");
+
+                            }
+                            if(second.l1.getText() == " Black player - click to put piece" && arrayLabels[finalI1].col == null ){
+                                ArrayList<Integer> arr = check2.manipulate(second.arrayLabels, finalI1);
+                                // There are elements to capture
+                                if(arr.size() != 0) {
+                                    arrayLabels[finalI1].isClicked = true;
+                                    arrayLabels[finalI1].col = Color.BLACK;
+                                    arrayLabels[finalI1].repaint();
+                                    for (int xi = 0; xi < arr.size(); xi++) {
+                                        arrayLabels[arr.get(xi)].isClicked = true;
+                                        arrayLabels[arr.get(xi)].col = Color.BLACK;
+                                        arrayLabels[arr.get(xi)].repaint();
+                                    }
+                                    // Move only valid if piece captured
+                                    Thread thread2 = new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            first.l1.setText(" White player - click to put piece");
+                                            second.l1.setText(" Black player - not your turn");
+                                        }
+                                    });
+                                    thread2.start();
+                                }
+
+
+                            }
+
+                            int count = 0;
+                            for(int x2 = 63; x2>=0;x2--){
+                                first.arrayLabels[x2].isClicked = second.arrayLabels[count].isClicked;
+                                first.arrayLabels[x2].col = second.arrayLabels[count].col;
+                                first.arrayLabels[x2].repaint();
+                                count++;
+                            }
+                        }
+                    });
+                    sec.start();
+
                 }
             });
         }
     }
     public static void main(String args[]){
-        front first = new front();
+        front first = new front("Reversi - white player");
+        front second = new front("Reversi - black player");
         // Is it the players turn?
         int state = 0;
         // Creation of button
         first.button = new JButton("Greedy AI (play white)");
+        second.button = new JButton("Greedy AI (play black)");
         // Label telling user whether it is their turn
         first.l1 = new JLabel(" White player - click to put piece");
-        first.boxes();
-
-
-        front second = new front();
-        second.button = new JButton("Greedy AI (play black)");
         second.l1 = new JLabel(" Black player - not your turn");
+        first.boxes();
         second.boxes();
+
 
         first.initalisation(first,second);
         second.initalisation(first,second);
@@ -137,5 +205,4 @@ class MyButton extends JButton
         }
     }
 }
-// Painting goes over all buttons
-// Painting individual buttons
+// Doesn't capture the most amount of pieces
