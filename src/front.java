@@ -199,8 +199,21 @@ class MyButton extends JButton
         {
             super.paintComponent(g);
             g.setColor(col);
-            g.fillOval(2, 2, getWidth()-5, getHeight()-5);
-           // this.isClicked = false;
+            if (col == Color.BLACK){
+                g.setColor(Color.WHITE);
+                g.drawOval(2,2,getWidth()-5, getHeight()-5);
+                g.setColor(Color.BLACK);
+                g.fillOval(2,2,getWidth()-5, getHeight()-5);
+            } else{
+                g.setColor(Color.BLACK);
+                g.drawOval(2,2,getWidth()-5, getHeight()-5);
+                g.setColor(Color.WHITE);
+                g.fillOval(2,2,getWidth()-5, getHeight()-5);
+
+            }
+
+
+            // this.isClicked = false;
 
         }
     }
