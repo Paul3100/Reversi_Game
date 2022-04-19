@@ -130,7 +130,6 @@ public class one {
 
         }
         // Checks bottom-right Section
-        System.out.println("Bottom check");
         status = false;
         ArrayList<Integer> arr6 = new ArrayList<Integer>();
         down = position;
@@ -154,6 +153,55 @@ public class one {
 
 
         }
+        // Checks bottom-left Section
+        status = false;
+        ArrayList<Integer> arr7 = new ArrayList<Integer>();
+        down = position;
+        for(int i=0;i<left_top;i++){
+            down = down-7;
+            // Looping corresponding index below it
+            // If below it, there's an opposite colour
+            if(arrayLabels[down].col == Color.BLACK ) {
+                arr7.add(down);
+                status = true;
+                continue;
+            }
+            if(arrayLabels[down].col == Color.WHITE && status) {
+                break;
+            }
+            // If below piece is either not black or doesn't contain an element then break
+            if(arrayLabels[down].col != Color.BLACK|| arrayLabels[down].col == null ) {
+                arr7 = new ArrayList<Integer>();
+                break;
+            }
+
+
+        }
+        // Checks top-left Section
+        status = false;
+        ArrayList<Integer> arr8 = new ArrayList<Integer>();
+        down = position;
+        for(int i=0;i<left_bottom;i++){
+            down = down+9;
+            // Looping corresponding index below it
+            // If below it, there's an opposite colour
+            if(arrayLabels[down].col == Color.BLACK ) {
+                arr8.add(down);
+                status = true;
+                continue;
+            }
+            if(arrayLabels[down].col == Color.WHITE && status) {
+                break;
+            }
+            // If below piece is either not black or doesn't contain an element then break
+            if(arrayLabels[down].col != Color.BLACK|| arrayLabels[down].col == null ) {
+                arr8 = new ArrayList<Integer>();
+                break;
+            }
+
+
+        }
+
         // Finding which section captures the most
         ArrayList<Integer> capture_most = new ArrayList<Integer>();
         capture_most.add(arr1.size());
@@ -162,6 +210,8 @@ public class one {
         capture_most.add(arr4.size());
         capture_most.add(arr5.size());
         capture_most.add(arr6.size());
+        capture_most.add(arr7.size());
+        capture_most.add(arr8.size());
         switch(capture_most.indexOf(Collections.max(capture_most))) {
             case 0:
                 return arr1;
@@ -175,6 +225,10 @@ public class one {
                 return arr5;
             case 5:
                 return arr6;
+            case 6:
+                return arr7;
+            case 7:
+                return arr8;
         }
         //should not be returning what is below
         return capture_most;

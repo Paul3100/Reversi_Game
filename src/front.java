@@ -218,4 +218,4 @@ class MyButton extends JButton
         }
     }
 }
-// Doesn't capture the most amount of pieces
+// Not your turn comes up at wrong time
