@@ -9,14 +9,18 @@ public class two {
         double left_bottom = Math.floor((63-position)/8.0);
         // to go down
         int down = position;
+        ArrayList<Integer> arr_final = new ArrayList<Integer>();
         //Stores index of elements to change colour
         ArrayList<Integer> arr1 = new ArrayList<Integer>();
-        // Ensures before checking for another white another black has at least been spotted
+        // Ensures before checking for another black another white has at least been spotted
         boolean status = false;
         // Checks bottom Section - and that not on bottom column
         for(int i=0;i<left_bottom;i++){
             // Looping corresponding index below it
             down = down+8;
+            if (down>63||down<0){
+                break;
+            }
             // If below it, there's an opposite colour
             if(arrayLabels[down].col == Color.WHITE ) {
                 arr1.add(down);
@@ -24,6 +28,7 @@ public class two {
                 continue;
             }
             if(arrayLabels[down].col == Color.BLACK && status) {
+                arr_final.addAll(arr1);
                 break;
             }
             // If below piece is either not black or doesn't contain an element then break
@@ -39,6 +44,9 @@ public class two {
         int left_top = (int) (8-(left_bottom+1));
         for(int i=0;i<left_top;i++){
             down = down-8;
+            if (down>63||down<0){
+                break;
+            }
             // Looping corresponding index below it
             // If below it, there's an opposite colour
             if(arrayLabels[down].col == Color.WHITE ) {
@@ -47,6 +55,7 @@ public class two {
                 continue;
             }
             if(arrayLabels[down].col == Color.BLACK && status) {
+                arr_final.addAll(arr2);
                 break;
             }
             // If below piece is either not black or doesn't contain an element then break
@@ -63,6 +72,9 @@ public class two {
         int left_left = position-(left_top*8);
         for(int i=0;i<left_left;i++){
             down = down -1;
+            if (down>63||down<0){
+                break;
+            }
             // Looping corresponding index below it
             // If below it, there's an opposite colour
             if(arrayLabels[down].col == Color.WHITE ) {
@@ -71,6 +83,7 @@ public class two {
                 continue;
             }
             if(arrayLabels[down].col == Color.BLACK && status) {
+                arr_final.addAll(arr3);
                 break;
             }
             // If below piece is either not black or doesn't contain an element then break
@@ -86,6 +99,9 @@ public class two {
         int left_right = (int) (64-((left_bottom*8)+(left_top*8)+left_left))-1;
         for(int i=0;i<left_right;i++){
             down = down+1;
+            if (down>63||down<0){
+                break;
+            }
             // Looping corresponding index below it
             // If below it, there's an opposite colour
             if(arrayLabels[down].col == Color.WHITE ) {
@@ -94,6 +110,7 @@ public class two {
                 continue;
             }
             if(arrayLabels[down].col == Color.BLACK && status) {
+                arr_final.addAll(arr4);
                 break;
             }
             // If below piece is either not black or doesn't contain an element then break
@@ -108,6 +125,9 @@ public class two {
         down = position;
         for(int i=0;i<left_bottom;i++){
             down = down+7;
+            if (down>63||down<0){
+                break;
+            }
             // Looping corresponding index below it
             // If below it, there's an opposite colour
             if(arrayLabels[down].col == Color.WHITE ) {
@@ -116,6 +136,7 @@ public class two {
                 continue;
             }
             if(arrayLabels[down].col == Color.BLACK && status) {
+                arr_final.addAll(arr5);
                 break;
             }
             // If below piece is either not black or doesn't contain an element then break
@@ -127,12 +148,14 @@ public class two {
 
         }
         // Checks bottom-right Section
-        System.out.println("Bottom check");
         status = false;
         ArrayList<Integer> arr6 = new ArrayList<Integer>();
         down = position;
         for(int i=0;i<left_top;i++){
             down = down-9;
+            if (down>63||down<0){
+                break;
+            }
             // Looping corresponding index below it
             // If below it, there's an opposite colour
             if(arrayLabels[down].col == Color.WHITE ) {
@@ -141,6 +164,7 @@ public class two {
                 continue;
             }
             if(arrayLabels[down].col == Color.BLACK && status) {
+                arr_final.addAll(arr6);
                 break;
             }
             // If below piece is either not black or doesn't contain an element then break
@@ -157,6 +181,9 @@ public class two {
         down = position;
         for(int i=0;i<left_top;i++){
             down = down-7;
+            if (down>63||down<0){
+                break;
+            }
             // Looping corresponding index below it
             // If below it, there's an opposite colour
             if(arrayLabels[down].col == Color.WHITE ) {
@@ -165,6 +192,7 @@ public class two {
                 continue;
             }
             if(arrayLabels[down].col == Color.BLACK && status) {
+                arr_final.addAll(arr7);
                 break;
             }
             // If below piece is either not black or doesn't contain an element then break
@@ -181,6 +209,9 @@ public class two {
         down = position;
         for(int i=0;i<left_bottom;i++){
             down = down+9;
+            if (down>63||down<0){
+                break;
+            }
             // Looping corresponding index below it
             // If below it, there's an opposite colour
             if(arrayLabels[down].col == Color.WHITE ) {
@@ -189,6 +220,7 @@ public class two {
                 continue;
             }
             if(arrayLabels[down].col == Color.BLACK && status) {
+                arr_final.addAll(arr8);
                 break;
             }
             // If below piece is either not black or doesn't contain an element then break
@@ -199,37 +231,203 @@ public class two {
 
 
         }
+        return arr_final;
 
-        // Finding which section captures the most
-        ArrayList<Integer> capture_most = new ArrayList<Integer>();
-        capture_most.add(arr1.size());
-        capture_most.add(arr2.size());
-        capture_most.add(arr3.size());
-        capture_most.add(arr4.size());
-        capture_most.add(arr5.size());
-        capture_most.add(arr6.size());
-        capture_most.add(arr7.size());
-        capture_most.add(arr8.size());
-        switch(capture_most.indexOf(Collections.max(capture_most))) {
-            case 0:
-                return arr1;
-            case 1:
-                return arr2;
-            case 2:
-                return arr3;
-            case 3:
-                return arr4;
-            case 4:
-                return arr5;
-            case 5:
-                return arr6;
-            case 6:
-                return arr7;
-            case 7:
-                return arr8;
+    }
+    public boolean validation(MyButton[] arrayLabels,int position){
+        // Number of rows left below it
+        double left_bottom = Math.floor((63-position)/8.0);
+        // to go down
+        int down = position;
+        // Ensures before checking for another black another white has at least been spotted
+        boolean status = false;
+        // Checks bottom Section - and that not on bottom column
+        for(int i=0;i<left_bottom;i++){
+            // Looping corresponding index below it
+            down = down+8;
+            if (down>63||down<0){
+                break;
+            }
+            // If below it, there's an opposite colour
+            if(arrayLabels[down].col == Color.WHITE ) {
+                status = true;
+                continue;
+            }
+            if(arrayLabels[down].col == null && status) {
+                return true;
+            }
+            // If below piece is either not black or doesn't contain an element then break
+            if(arrayLabels[down].col != Color.WHITE|| arrayLabels[down].col == null ) {
+                break;
+            }
+
         }
-        //should not be returning what is below
-        return capture_most;
+        // Checks top Section - and that not on top column
+        down = position;
+        int left_top = (int) (8-(left_bottom+1));
+        for(int i=0;i<left_top;i++){
+            down = down-8;
+            if (down>63||down<0){
+                break;
+            }
+            // Looping corresponding index below it
+            // If below it, there's an opposite colour
+            if(arrayLabels[down].col == Color.WHITE ) {
+                status = true;
+                continue;
+            }
+            if(arrayLabels[down].col == null && status) {
+                return true;
+            }
+            // If below piece is either not black or doesn't contain an element then break
+            if(arrayLabels[down].col != Color.WHITE|| arrayLabels[down].col == null ) {
+                break;
+            }
+
+
+        }
+        // Checks left Section
+        down = position;
+        int left_left = position-(left_top*8);
+        for(int i=0;i<left_left;i++){
+            down = down -1;
+            if (down>63||down<0){
+                break;
+            }
+            // Looping corresponding index below it
+            // If below it, there's an opposite colour
+            if(arrayLabels[down].col == Color.WHITE ) {
+                status = true;
+                continue;
+            }
+            if(arrayLabels[down].col == null && status) {
+                return true;
+            }
+            // If below piece is either not black or doesn't contain an element then break
+            if(arrayLabels[down].col != Color.WHITE|| arrayLabels[down].col == null ) {
+                break;
+            }
+
+        }
+        // Checks right Section
+        down = position;
+        int left_right = (int) (64-((left_bottom*8)+(left_top*8)+left_left))-1;
+        for(int i=0;i<left_right;i++){
+            down = down+1;
+            if (down>63||down<0){
+                break;
+            }
+            // Looping corresponding index below it
+            // If below it, there's an opposite colour
+            if(arrayLabels[down].col == Color.WHITE ) {
+                status = true;
+                continue;
+            }
+            if(arrayLabels[down].col == null && status) {
+                return true;
+            }
+            // If below piece is either not black or doesn't contain an element then break
+            if(arrayLabels[down].col != Color.WHITE|| arrayLabels[down].col == null ) {
+                break;
+            }
+        }
+        // Checks top-right Section
+        status = false;
+        down = position;
+        for(int i=0;i<left_bottom;i++){
+            down = down+7;
+            if (down>63||down<0){
+                break;
+            }
+            // Looping corresponding index below it
+            // If below it, there's an opposite colour
+            if(arrayLabels[down].col == Color.WHITE ) {
+                status = true;
+                continue;
+            }
+            if(arrayLabels[down].col == null && status) {
+                return true;
+            }
+            // If below piece is either not black or doesn't contain an element then break
+            if(arrayLabels[down].col != Color.WHITE|| arrayLabels[down].col == null ) {
+                break;
+            }
+
+
+        }
+        // Checks bottom-right Section
+        status = false;
+        down = position;
+        for(int i=0;i<left_top;i++){
+            down = down-9;
+            if (down>63||down<0){
+                break;
+            }
+            // Looping corresponding index below it
+            // If below it, there's an opposite colour
+            if(arrayLabels[down].col == Color.WHITE ) {
+                status = true;
+                continue;
+            }
+            if(arrayLabels[down].col == null && status) {
+                return true;
+                            }
+            // If below piece is either not black or doesn't contain an element then break
+            if(arrayLabels[down].col != Color.WHITE|| arrayLabels[down].col == null ) {
+                break;
+            }
+
+
+        }
+        // Checks bottom-left Section
+        status = false;
+        down = position;
+        for(int i=0;i<left_top;i++){
+            down = down-7;
+            if (down>63||down<0){
+                break;
+            }
+            // Looping corresponding index below it
+            // If below it, there's an opposite colour
+            if(arrayLabels[down].col == Color.WHITE ) {
+                status = true;
+                continue;
+            }
+            if(arrayLabels[down].col == null && status) {
+                return true;
+                            }
+            // If below piece is either not black or doesn't contain an element then break
+            if(arrayLabels[down].col != Color.WHITE|| arrayLabels[down].col == null ) {
+                break;
+            }
+
+
+        }
+        // Checks top-left Section
+        status = false;
+        down = position;
+        for(int i=0;i<left_bottom;i++){
+            down = down+9;
+            if (down>63||down<0){
+                break;
+            }
+            // Looping corresponding index below it
+            // If below it, there's an opposite colour
+            if(arrayLabels[down].col == Color.WHITE ) {
+                status = true;
+                continue;
+            }
+            if(arrayLabels[down].col == null && status) {
+                return true;
+            }
+            // If below piece is either not black or doesn't contain an element then break
+            if(arrayLabels[down].col != Color.WHITE|| arrayLabels[down].col == null ) {
+                break;
+            }
+
+
+        }
+        return false;
     }
     public static void main(String[] args){
 

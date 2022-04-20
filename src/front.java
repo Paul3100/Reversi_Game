@@ -14,7 +14,8 @@ public class front{
     // Adding Buttons
     JButton button = new JButton();
     MyButton [] arrayLabels = new MyButton[64];
-    String myText = "First";
+    String myText = "";
+    boolean validation;
     front(String title){
         panel.setLayout( new GridLayout(8,8) ); // Setting the number of boxes
         visual.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Program should not run in background after exit
@@ -56,6 +57,7 @@ public class front{
         visual.setVisible(true);
     }
     public void initalisation(front first,front second){
+        // Checking if new move can be made needs to be repositioned - I think both need to be in both first and second
         one check = new one();
         two check2 = new two();
         for(int i = 0; i<64; i++){
@@ -67,40 +69,58 @@ public class front{
                         @Override
                         public void run() {
                             if (first.l1.getText() != " White player - click to put piece" ){
-                                JOptionPane.showMessageDialog(first.visual,"Await your turn");
+                                JOptionPane.showMessageDialog(first.visual,"Await your turn: Double click to close");
                             }
-                            if (first.l1.getText() == " White player - click to put piece"&& arrayLabels[finalI1].col == null){
-                                ArrayList<Integer> arr = check.manipulate(first.arrayLabels,finalI1);
-                                // There are elements to capture
-                                if(arr.size() != 0) {
-                                    arrayLabels[finalI1].isClicked = true;
-                                    arrayLabels[finalI1].col = Color.WHITE;
-                                    arrayLabels[finalI1].repaint();
-                                    for (int xi = 0; xi < arr.size(); xi++) {
-                                        arrayLabels[arr.get(xi)].isClicked = true;
-                                        arrayLabels[arr.get(xi)].col = Color.WHITE;
-                                        arrayLabels[arr.get(xi)].repaint();
-                                    }
-                                    // Move only valid if piece captured
-                                    Thread thread = new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            first.l1.setText(" White player - not your turn");
-                                            second.l1.setText(" Black player - click to put piece");
+                            if (first.l1.getText() == " White player - click to put piece"&& !first.arrayLabels[finalI1].isClicked) {
+                                // Checking to see if any more moves can be made:
+                                for (int val = 0; val < 64; val++) {
+                                    if(first.arrayLabels[val].col==Color.WHITE){
+                                        first.validation = check.validation(first.arrayLabels, val);
+                                        if (first.validation) {
+                                            break;
                                         }
-                                    });
-                                    thread.start();
+                                    }
+                                }
+                                // If they can, then check if pieces can be captured
+                                if (first.validation) {
+                                    ArrayList<Integer> arr = check.manipulate(first.arrayLabels, finalI1);
+                                    // There are elements to capture
+                                    if (arr.size() != 0) {
+                                        arrayLabels[finalI1].isClicked = true;
+                                        arrayLabels[finalI1].col = Color.WHITE;
+                                        arrayLabels[finalI1].repaint();
+                                        for (int xi = 0; xi < arr.size(); xi++) {
+                                            arrayLabels[arr.get(xi)].isClicked = true;
+                                            arrayLabels[arr.get(xi)].col = Color.WHITE;
+                                            arrayLabels[arr.get(xi)].repaint();
+                                        }
+                                        // Move only valid if piece captured
+                                        // Passing command to black player
+                                        System.out.println("Size: "+arr.size()+" Array: "+arr+"Clicked: "+finalI1);
+                                        Thread thread = new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                first.l1.setText(" White player - not your turn");
+                                                second.l1.setText(" Black player - click to put piece");
+                                            }
+                                        });
+                                        thread.start();
 
+                                    }
+
+                                } else {
+                                    System.out.println("White");
+                                    first.l1.setText(" White player - not your turn");
+                                    second.l1.setText(" Black player - click to put piece");
                                 }
                                 // Making second window 180 degrees
                                 int count = 0;
-                                for(int x2 = 63; x2>=0;x2--){
+                                for (int x2 = 63; x2 >= 0; x2--) {
                                     second.arrayLabels[count].isClicked = first.arrayLabels[x2].isClicked;
                                     second.arrayLabels[count].col = first.arrayLabels[x2].col;
                                     second.arrayLabels[count].repaint();
                                     count++;
                                 }
-
 
                             }
 
@@ -117,33 +137,48 @@ public class front{
                         @Override
                         public void run() {
                             if (second.l1.getText() != " Black player - click to put piece"){
-                                JOptionPane.showMessageDialog(second.visual,"Await your turn");
+                                JOptionPane.showMessageDialog(second.visual,"Await your turn: Double click to close");
 
                             }
-                            if(second.l1.getText() == " Black player - click to put piece" && arrayLabels[finalI1].col == null ){
-                                ArrayList<Integer> arr = check2.manipulate(second.arrayLabels, finalI1);
-                                // There are elements to capture
-                                if(arr.size() != 0) {
-                                    arrayLabels[finalI1].isClicked = true;
-                                    arrayLabels[finalI1].col = Color.BLACK;
-                                    arrayLabels[finalI1].repaint();
-                                    for (int xi = 0; xi < arr.size(); xi++) {
-                                        arrayLabels[arr.get(xi)].isClicked = true;
-                                        arrayLabels[arr.get(xi)].col = Color.BLACK;
-                                        arrayLabels[arr.get(xi)].repaint();
-                                    }
-                                    // Move only valid if piece captured
-                                    Thread thread2 = new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            first.l1.setText(" White player - click to put piece");
-                                            second.l1.setText(" Black player - not your turn");
+                            if(second.l1.getText() == " Black player - click to put piece" && !second.arrayLabels[finalI1].isClicked ){
+                                // Checking to see if any moves can be made:
+                                for (int val = 0; val < 64; val++) {
+                                    if(second.arrayLabels[val].col==Color.BLACK){
+                                        second.validation = check2.validation(second.arrayLabels, val);
+                                        if (second.validation) {
+                                            break;
                                         }
-                                    });
-                                    thread2.start();
+                                    }
                                 }
+                                if(validation){
+                                    ArrayList<Integer> arr = check2.manipulate(second.arrayLabels, finalI1);
+                                    // There are elements to capture
+                                    if(arr.size() != 0) {
+                                        arrayLabels[finalI1].isClicked = true;
+                                        arrayLabels[finalI1].col = Color.BLACK;
+                                        arrayLabels[finalI1].repaint();
+                                        for (int xi = 0; xi < arr.size(); xi++) {
+                                            arrayLabels[arr.get(xi)].isClicked = true;
+                                            arrayLabels[arr.get(xi)].col = Color.BLACK;
+                                            arrayLabels[arr.get(xi)].repaint();
+                                        }
+                                        // Passing command to white player
+                                        Thread thread2 = new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                first.l1.setText(" White player - click to put piece");
+                                                second.l1.setText(" Black player - not your turn");
 
+                                            }
+                                        });
+                                        thread2.start();
+                                    }
+                                } else {
+                                    System.out.println("Black");
+                                    first.l1.setText(" White player - click to put piece");
+                                    second.l1.setText(" Black player - not your turn");
 
+                                }
                             }
 
                             int count = 0;
@@ -160,6 +195,10 @@ public class front{
                 }
             });
         }
+    }
+    // displays information of who won.
+    public void count(){
+
     }
     public static void main(String args[]){
         front first = new front("Reversi - white player");
@@ -178,13 +217,14 @@ public class front{
 
         first.initalisation(first,second);
         second.initalisation(first,second);
+        first.myText = "First";
         second.myText = "Second";
     }
 }
 
 class MyButton extends JButton
 {
-    public boolean isClicked;
+    public boolean isClicked = false;
     public Color col;
 
     public Dimension getPreferredSize()
@@ -219,3 +259,21 @@ class MyButton extends JButton
     }
 }
 // Not your turn comes up at wrong time
+// Check if player can make move - Otherwise pass control to other player +
+// AI +
+
+
+/* Plan for checking if player can make a move:
+With position = index in arrayLabels (for player)
+Loop through each line for index, checking for white (or black).
+If status = true and end does not contain a colour, return true
+ */
+
+/* Plan for AI:
+With position = index in arrayLabels (for player) that is NULL
+Calculate how many pieces can be captured using the if player can make move function
+Add position, and number of pieces it can capture into an array
+Fetch index of largest number -> Find corresponding index, then plot
+ */
+
+
