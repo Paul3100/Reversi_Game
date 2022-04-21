@@ -119,11 +119,11 @@ public class two {
                 break;
             }
         }
-        // Checks top-right Section
+        // Checks bottom-left Section
         status = false;
         ArrayList<Integer> arr5 = new ArrayList<Integer>();
         down = position;
-        for(int i=0;i<left_bottom;i++){
+        for(int i=0;i<left_left;i++){
             down = down+7;
             if (down>63||down<0){
                 break;
@@ -147,7 +147,7 @@ public class two {
 
 
         }
-        // Checks bottom-right Section
+        // Checks top-left Section
         status = false;
         ArrayList<Integer> arr6 = new ArrayList<Integer>();
         down = position;
@@ -175,7 +175,7 @@ public class two {
 
 
         }
-        // Checks bottom-left Section
+        // Checks top-right Section
         status = false;
         ArrayList<Integer> arr7 = new ArrayList<Integer>();
         down = position;
@@ -203,11 +203,11 @@ public class two {
 
 
         }
-        // Checks top-left Section
+        // Checks bottom-right Section
         status = false;
         ArrayList<Integer> arr8 = new ArrayList<Integer>();
         down = position;
-        for(int i=0;i<left_bottom;i++){
+        for(int i=0;i<left_right;i++){
             down = down+9;
             if (down>63||down<0){
                 break;
@@ -232,7 +232,6 @@ public class two {
 
         }
         return arr_final;
-
     }
     public boolean validation(MyButton[] arrayLabels,int position){
         // Number of rows left below it
@@ -331,10 +330,10 @@ public class two {
                 break;
             }
         }
-        // Checks top-right Section
+        // Checks bottom-left Section
         status = false;
         down = position;
-        for(int i=0;i<left_bottom;i++){
+        for(int i=0;i<left_left;i++){
             down = down+7;
             if (down>63||down<0){
                 break;
@@ -355,7 +354,7 @@ public class two {
 
 
         }
-        // Checks bottom-right Section
+        // Checks top-left Section
         status = false;
         down = position;
         for(int i=0;i<left_top;i++){
@@ -379,7 +378,7 @@ public class two {
 
 
         }
-        // Checks bottom-left Section
+        // Checks top-right Section
         status = false;
         down = position;
         for(int i=0;i<left_top;i++){
@@ -403,10 +402,10 @@ public class two {
 
 
         }
-        // Checks top-left Section
+        // Checks bottom-right Section
         status = false;
         down = position;
-        for(int i=0;i<left_bottom;i++){
+        for(int i=0;i<left_right;i++){
             down = down+9;
             if (down>63||down<0){
                 break;

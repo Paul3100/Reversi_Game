@@ -122,11 +122,11 @@ public class one {
                 break;
             }
         }
-        // Checks top-right Section
+        // Checks bottom-left Section
         status = false;
         ArrayList<Integer> arr5 = new ArrayList<Integer>();
         down = position;
-        for(int i=0;i<left_bottom;i++){
+        for(int i=0;i<left_left;i++){
             down = down+7;
             if (down>63||down<0){
                 break;
@@ -150,7 +150,7 @@ public class one {
 
 
         }
-        // Checks bottom-right Section
+        // Checks top-left Section
         status = false;
         ArrayList<Integer> arr6 = new ArrayList<Integer>();
         down = position;
@@ -178,7 +178,7 @@ public class one {
 
 
         }
-        // Checks bottom-left Section
+        // Checks top-right Section
         status = false;
         ArrayList<Integer> arr7 = new ArrayList<Integer>();
         down = position;
@@ -206,11 +206,11 @@ public class one {
 
 
         }
-        // Checks top-left Section
+        // Checks bottom-right Section
         status = false;
         ArrayList<Integer> arr8 = new ArrayList<Integer>();
         down = position;
-        for(int i=0;i<left_bottom;i++){
+        for(int i=0;i<left_right;i++){
             down = down+9;
             if (down>63||down<0){
                 break;
@@ -223,6 +223,7 @@ public class one {
                 continue;
             }
             if(arrayLabels[down].col == Color.WHITE && status) {
+                System.out.println(8+" Final:" + arr8);
                 arr_final.addAll(arr8);
                 break;
             }
@@ -313,7 +314,6 @@ public class one {
         }
         // Checks right Section
         status = false;
-        ArrayList<Integer> arr4 = new ArrayList<Integer>();
         down = position;
         int left_right = (int) (64-((left_bottom*8)+(left_top*8)+left_left))-1;
         for(int i=0;i<left_right;i++){
@@ -335,11 +335,11 @@ public class one {
                 break;
             }
         }
-        // Checks top-right Section
+        // Checks bottom-left Section
         status = false;
         ArrayList<Integer> arr5 = new ArrayList<Integer>();
         down = position;
-        for(int i=0;i<left_bottom;i++){
+        for(int i=0;i<left_left;i++){
             down = down+7;
             if (down>63||down<0){
                 break;
@@ -361,7 +361,7 @@ public class one {
 
 
         }
-        // Checks bottom-right Section
+        // Checks top-left Section
         status = false;
         ArrayList<Integer> arr6 = new ArrayList<Integer>();
         down = position;
@@ -386,7 +386,7 @@ public class one {
 
 
         }
-        // Checks bottom-left Section
+        // Checks top-right Section
         status = false;
         down = position;
         for(int i=0;i<left_top;i++){
@@ -409,10 +409,10 @@ public class one {
             }
 
         }
-        // Checks top-left Section
+        // Checks bottom-right Section
         status = false;
         down = position;
-        for(int i=0;i<left_bottom;i++){
+        for(int i=0;i<left_right;i++){
             down = down+9;
             if (down>63||down<0){
                 break;
