@@ -2,12 +2,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import javax.print.DocFlavor;
 import javax.swing.*;
 
-public class front{
+public class front extends Thread{
     JFrame visual = new JFrame();
     JPanel panel = new JPanel();
+
     // Declaring them as class attributes
     // Adding Label
     JLabel l1 = new JLabel("");
@@ -56,6 +59,236 @@ public class front{
         visual.setSize(800,800);
         visual.setVisible(true);
     }
+    public void place1(front first,front second,int finalI1,one check, two check2){
+        if (first.l1.getText() != " White player - click to put piece"){
+            JOptionPane.showMessageDialog(first.visual,"Await your turn: Double click to close");
+        }
+        if (first.l1.getText() == " White player - click to put piece"&& !first.arrayLabels[finalI1].isClicked) {
+            System.out.println("This Version");
+            // Checking to see if any more moves can be made:
+            for (int val = 0; val < 64; val++) {
+                if(first.arrayLabels[val].col==Color.WHITE){
+                    first.validation = check.validation(first.arrayLabels, val);
+                    if (first.validation == true) {
+                        System.out.println("First: " + first.validation );
+                        break;
+                    }
+                    else{
+                        System.out.println("Keeps going");
+                    }
+                }
+            }
+            // Checking to see if any moves can be made: FOR 2nd player
+            for (int val = 0; val < 64; val++) {
+                if(second.arrayLabels[val].col==Color.BLACK){
+                    second.validation = check2.validation(second.arrayLabels, val);
+                    if (second.validation == true) {
+                        System.out.println("Second: " + second.validation );
+                        break;
+                    }
+                }
+            }
+            // if no moves left for first but some left for right, pass to black
+            System.out.println("White Switching: "+first.validation +" "+second.validation);
+            if (!first.validation&&second.validation){
+                first.l1.setText(" White player - not your turn");
+                second.l1.setText(" Black player - click to put piece");
+
+            }
+            // If they can, then check if pieces can be captured
+            if (first.validation) {
+                ArrayList<Integer> arr = check.manipulate(first.arrayLabels, finalI1);
+                // There are elements to capture
+                if (arr.size() != 0) {
+                    arrayLabels[finalI1].isClicked = true;
+                    arrayLabels[finalI1].col = Color.WHITE;
+                    arrayLabels[finalI1].repaint();
+
+                    for (int xi = 0; xi < arr.size(); xi++) {
+                        arrayLabels[arr.get(xi)].isClicked = true;
+                        arrayLabels[arr.get(xi)].col = Color.WHITE;
+                        arrayLabels[arr.get(xi)].repaint();
+                    }
+                    System.out.println("Test");
+
+                    // Switching control to other player
+                    Thread t2 = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            first.l1.setText(" White player - not your turn");
+                            second.l1.setText(" Black player - click to put piece");
+
+                        }
+                    });
+                    t2.start();
+
+                }
+            }
+            // Making second window 180 degrees
+            int count = 0;
+            for (int x2 = 63; x2 >= 0; x2--) {
+                second.arrayLabels[count].isClicked = first.arrayLabels[x2].isClicked;
+                second.arrayLabels[count].col = first.arrayLabels[x2].col;
+                second.arrayLabels[count].repaint();
+                count++;
+            }
+            //System.out.println("White: "+first.validation+" Black: "+second.validation);
+            // Checking to see if any more moves can be made:
+            first.validation = false;
+            second.validation = false;
+            for (int val = 0; val < 64; val++) {
+                if(first.arrayLabels[val].col==Color.WHITE){
+                    first.validation = check.validation(first.arrayLabels, val);
+                    if (first.validation) {
+                        break;
+                    }
+                }
+            }
+            for (int val = 0; val < 64; val++) {
+                if(second.arrayLabels[val].col==Color.BLACK){
+                    second.validation = check2.validation(second.arrayLabels, val);
+                    if (second.validation) {
+                        break;
+                    }
+                }
+            }
+            if (!first.validation&&!second.validation){
+                int white = 0;
+                int black = 0;
+                for (int i = 0;i<64;i++){
+                    if (first.arrayLabels[i].col == Color.BLACK)
+                        black = black+1;
+                    if (first.arrayLabels[i].col == Color.WHITE)
+                        white = white+1;
+                }
+                if(white>black){
+                    JOptionPane.showMessageDialog(first.visual,"White wins: "+white+":"+black);
+                }
+                if(white<black){
+                    JOptionPane.showMessageDialog(second.visual,"Black wins: "+black+":"+white);
+                }
+                if(white==black){
+                    JOptionPane.showMessageDialog(second.visual,"Draw: "+black+":"+white);
+                }
+                System.out.println("End White");
+                System.exit(0);
+            }
+
+        }
+    }
+    public void place2(front first,front second,int finalI1,one check, two check2){
+        if (second.l1.getText() != " Black player - click to put piece"){
+            JOptionPane.showMessageDialog(second.visual,"Await your turn: Double click to close");
+
+        }
+        if(second.l1.getText() == " Black player - click to put piece" && !second.arrayLabels[finalI1].isClicked ){
+            // Checking to see if any more moves can be made:
+            for (int val = 0; val < 64; val++) {
+                if(first.arrayLabels[val].col==Color.WHITE){
+                    first.validation = check.validation(first.arrayLabels, val);
+                    if (first.validation) {
+                        break;
+                    }
+                }
+            }
+            // Checking to see if any moves can be made: FOR second player
+            for (int val = 0; val < 64; val++) {
+                if(second.arrayLabels[val].col==Color.BLACK){
+                    second.validation = check2.validation(second.arrayLabels, val);
+                    if (second.validation) {
+                        break;
+                    }
+                }
+            }
+            if(second.validation){
+                ArrayList<Integer> arr = check2.manipulate(second.arrayLabels, finalI1);
+                // There are elements to capture
+                if(arr.size() != 0) {
+                    arrayLabels[finalI1].isClicked = true;
+                    arrayLabels[finalI1].col = Color.BLACK;
+                    arrayLabels[finalI1].repaint();
+                    for (int xi = 0; xi < arr.size(); xi++) {
+                        arrayLabels[arr.get(xi)].isClicked = true;
+                        arrayLabels[arr.get(xi)].col = Color.BLACK;
+                        arrayLabels[arr.get(xi)].repaint();
+                    }
+                    // Switching control to other player
+                    // Switching control to other player
+                    Thread t2 = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            first.l1.setText(" White player - click to put piece");
+                            second.l1.setText(" Black player - not your turn");
+
+                        }
+                    });
+                    t2.start();
+                }
+            }
+            int count = 0;
+            for(int x2 = 63; x2>=0;x2--){
+                first.arrayLabels[x2].isClicked = second.arrayLabels[count].isClicked;
+                first.arrayLabels[x2].col = second.arrayLabels[count].col;
+                first.arrayLabels[x2].repaint();
+                count++;
+            }
+            // if no moves left for second but some left for first
+            if (first.validation&&!second.validation){
+                System.out.println("Black Switching");
+                Thread t2 = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        first.l1.setText(" White player - click to put piece");
+                        second.l1.setText(" Black player - not your turn");
+
+                    }
+                });
+
+            }
+            //System.out.println("White: "+first.validation+" Black: "+second.validation);
+            // Checking to see if any moves can be made: FOR second player
+            first.validation = false;
+            second.validation = false;
+            for (int val = 0; val < 64; val++) {
+                if(second.arrayLabels[val].col==Color.BLACK){
+                    second.validation = check2.validation(second.arrayLabels, val);
+                    if (second.validation) {
+                        break;
+                    }
+                }
+            }
+            // Checking to see if any more moves can be made:
+            for (int val = 0; val < 64; val++) {
+                if(first.arrayLabels[val].col==Color.WHITE){
+                    first.validation = check.validation(first.arrayLabels, val);
+                    if (first.validation) {
+                        break;
+                    }
+                }
+            }
+            if (!first.validation&&!second.validation){
+                int white = 0;
+                int black = 0;
+                for (int i = 0;i<64;i++){
+                    if (second.arrayLabels[i].col == Color.BLACK)
+                        black = black+1;
+                    if (second.arrayLabels[i].col == Color.WHITE)
+                        white = white+1;
+                }
+                if(white>black){
+                    JOptionPane.showMessageDialog(first.visual,"White wins: "+white+":"+black);
+                }
+                if(white<black){
+                    JOptionPane.showMessageDialog(second.visual,"Black wins: "+black+":"+white);
+                }
+                if(white==black){
+                    JOptionPane.showMessageDialog(second.visual,"Draw: "+black+":"+white);
+                }
+                System.out.println("End White");
+                System.exit(0);
+            }
+        }
+    }
     public void initalisation(front first,front second){
         // Checking if new move can be made needs to be repositioned - I think both need to be in both first and second
         one check = new one();
@@ -65,167 +298,30 @@ public class front{
             first.arrayLabels[i].addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e){
-                    Thread t = new Thread(new Runnable() {
+                    Thread t1 = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            if (first.l1.getText() != " White player - click to put piece" ){
-                                JOptionPane.showMessageDialog(first.visual,"Await your turn: Double click to close");
-                            }
-                            if (first.l1.getText() == " White player - click to put piece"&& !first.arrayLabels[finalI1].isClicked) {
-                                // Checking to see if any more moves can be made:
-                                for (int val = 0; val < 64; val++) {
-                                    if(first.arrayLabels[val].col==Color.WHITE){
-                                        first.validation = check.validation(first.arrayLabels, val);
-                                        if (first.validation) {
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                // Checking to see if any moves can be made: FOR 2nd player
-                                for (int val = 0; val < 64; val++) {
-                                    if(second.arrayLabels[val].col==Color.BLACK){
-                                        second.validation = check2.validation(second.arrayLabels, val);
-                                        if (second.validation) {
-                                            break;
-                                        }
-                                    }
-                                }
-                                // If they can, then check if pieces can be captured
-                                if (first.validation) {
-                                    ArrayList<Integer> arr = check.manipulate(first.arrayLabels, finalI1);
-                                    System.out.println("First - "+"Size: "+arr.size()+" Array: "+arr+" Clicked: "+finalI1);
-                                    // There are elements to capture
-                                    if (arr.size() != 0) {
-                                        arrayLabels[finalI1].isClicked = true;
-                                        arrayLabels[finalI1].col = Color.WHITE;
-                                        arrayLabels[finalI1].repaint();
-                                        for (int xi = 0; xi < arr.size(); xi++) {
-                                            arrayLabels[arr.get(xi)].isClicked = true;
-                                            arrayLabels[arr.get(xi)].col = Color.WHITE;
-                                            arrayLabels[arr.get(xi)].repaint();
-                                        }
-                                        // Move only valid if piece captured
-                                        // Passing command to black player
-                                        Thread thread = new Thread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                first.l1.setText(" White player - not your turn");
-                                                second.l1.setText(" Black player - click to put piece");
-                                            }
-                                        });
-                                        thread.start();
-
-                                    }
-                                }
-                                // Making second window 180 degrees
-                                int count = 0;
-                                for (int x2 = 63; x2 >= 0; x2--) {
-                                    second.arrayLabels[count].isClicked = first.arrayLabels[x2].isClicked;
-                                    second.arrayLabels[count].col = first.arrayLabels[x2].col;
-                                    second.arrayLabels[count].repaint();
-                                    count++;
-                                }
-                                // if no moves left for first but some left for right
-                                if (!first.validation&&second.validation){
-                                    first.l1.setText(" White player - not your turn");
-                                    second.l1.setText(" Black player - click to put piece");
-                                }
-                                if (!first.validation&&!second.validation){
-                                    System.out.println("End White");
-                                }
-
-                            }
-
+                            first.place1(first,second,finalI1,check,check2);
                         }
                     });
-                    t.start();
+                    t1.start();
+
                 }
             });
 
             second.arrayLabels[i].addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e){
-                    Thread sec = new Thread(new Runnable() {
+                    Thread t3 = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            if (second.l1.getText() != " Black player - click to put piece"){
-                                JOptionPane.showMessageDialog(second.visual,"Await your turn: Double click to close");
-
-                            }
-                            if(second.l1.getText() == " Black player - click to put piece" && !second.arrayLabels[finalI1].isClicked ){
-                                // Checking to see if any more moves can be made:
-                                for (int val = 0; val < 64; val++) {
-                                    if(first.arrayLabels[val].col==Color.WHITE){
-                                        first.validation = check.validation(first.arrayLabels, val);
-                                        if (first.validation) {
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                // Checking to see if any moves can be made: FOR 1st player
-                                for (int val = 0; val < 64; val++) {
-                                    if(second.arrayLabels[val].col==Color.BLACK){
-                                        second.validation = check2.validation(second.arrayLabels, val);
-                                        if (second.validation) {
-                                            break;
-                                        }
-                                    }
-                                }
-                                if(second.validation){
-                                    ArrayList<Integer> arr = check2.manipulate(second.arrayLabels, finalI1);
-                                    System.out.println("Second - "+"Size: "+arr.size()+" Array: "+arr+" Clicked: "+finalI1);
-                                    // There are elements to capture
-                                    if(arr.size() != 0) {
-                                        arrayLabels[finalI1].isClicked = true;
-                                        arrayLabels[finalI1].col = Color.BLACK;
-                                        arrayLabels[finalI1].repaint();
-                                        for (int xi = 0; xi < arr.size(); xi++) {
-                                            arrayLabels[arr.get(xi)].isClicked = true;
-                                            arrayLabels[arr.get(xi)].col = Color.BLACK;
-                                            arrayLabels[arr.get(xi)].repaint();
-                                        }
-                                        // Passing command to white player
-                                        Thread thread2 = new Thread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                first.l1.setText(" White player - click to put piece");
-                                                second.l1.setText(" Black player - not your turn");
-
-                                            }
-                                        });
-                                        thread2.start();
-                                    }
-                                }
-                                int count = 0;
-                                for(int x2 = 63; x2>=0;x2--){
-                                    first.arrayLabels[x2].isClicked = second.arrayLabels[count].isClicked;
-                                    first.arrayLabels[x2].col = second.arrayLabels[count].col;
-                                    first.arrayLabels[x2].repaint();
-                                    count++;
-                                }
-                                // if no moves left for second but some left for first
-                                if (first.validation&&!second.validation){
-                                    first.l1.setText(" White player - click to put piece");
-                                    second.l1.setText(" Black player - not your turn");
-                                }
-                                if (!first.validation&&!second.validation){
-                                    System.out.println("End Black");
-                                }
-                            }
-
+                            second.place2(first,second,finalI1,check,check2);
                         }
                     });
-                    sec.start();
-
+                    t3.start();
                 }
             });
         }
-    }
-    // displays information of who won.
-    public void count(){
-
     }
     public static void main(String args[]){
         front first = new front("Reversi - white player");
@@ -252,7 +348,7 @@ public class front{
 class MyButton extends JButton
 {
     public boolean isClicked = false;
-    public Color col;
+    public Color col=null;
 
     public Dimension getPreferredSize()
     {

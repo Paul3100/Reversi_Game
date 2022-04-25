@@ -5,8 +5,12 @@ import javax.swing.*;
 
 public class one {
     public ArrayList<Integer> manipulate(MyButton[] arrayLabels,int position) {
+        int left_left_diag;
+        int left_top_diag;
+        int left_bottom_diag;
+        int left_right_diag;
         // Number of rows left below it
-        double left_bottom = Math.floor((63-position)/8.0);
+        int left_bottom = (int)Math.floor((63-position)/8.0);
         // to go down
         int down = position;
         ArrayList<Integer> arr_final = new ArrayList<Integer>();
@@ -126,9 +130,14 @@ public class one {
         status = false;
         ArrayList<Integer> arr5 = new ArrayList<Integer>();
         down = position;
-        for(int i=0;i<left_left;i++){
-            down = down+7;
-            if (down>63||down<0){
+        for(int i=0;i<left_top;i++){
+            down = down-7;
+            left_bottom_diag = (int)Math.floor((63-down)/8.0);
+            left_top_diag = (int) (8-(left_bottom_diag+1));
+            left_left_diag = down-(left_top_diag*8);
+
+            // Checks to make sure not going out of bounds and edges
+            if (down>63||down<0||left_left_diag<left_left){
                 break;
             }
             // Looping corresponding index below it
@@ -154,9 +163,13 @@ public class one {
         status = false;
         ArrayList<Integer> arr6 = new ArrayList<Integer>();
         down = position;
-        for(int i=0;i<left_top;i++){
-            down = down-9;
-            if (down>63||down<0){
+        for(int i=0;i<left_bottom;i++){
+            down = down+9;
+            left_bottom_diag = (int)Math.floor((63-down)/8.0);
+            left_top_diag = (int) (8-(left_bottom_diag+1));
+            left_left_diag = down-(left_top_diag*8);
+
+            if (down>63||down<0||left_left_diag<left_left){
                 break;
             }
             // Looping corresponding index below it
@@ -182,9 +195,15 @@ public class one {
         status = false;
         ArrayList<Integer> arr7 = new ArrayList<Integer>();
         down = position;
-        for(int i=0;i<left_top;i++){
-            down = down-7;
-            if (down>63||down<0){
+        for(int i=0;i<left_bottom;i++){
+            down = down+7;
+
+            left_bottom_diag = (int)Math.floor((63-down)/8.0);
+            left_top_diag = (int) (8-(left_bottom_diag+1));
+            left_left_diag = down-(left_top_diag*8);
+            left_right_diag = (int) (64-((left_bottom_diag*8)+(left_top_diag*8)+left_left_diag))-1;
+
+            if (down>63||down<0||left_right_diag<left_right){
                 break;
             }
             // Looping corresponding index below it
@@ -210,9 +229,15 @@ public class one {
         status = false;
         ArrayList<Integer> arr8 = new ArrayList<Integer>();
         down = position;
-        for(int i=0;i<left_right;i++){
-            down = down+9;
-            if (down>63||down<0){
+        for(int i=0;i<left_top;i++){
+            down = down-9;
+
+            left_bottom_diag = (int)Math.floor((63-down)/8.0);
+            left_top_diag = (int) (8-(left_bottom_diag+1));
+            left_left_diag = down-(left_top_diag*8);
+            left_right_diag = (int) (64-((left_bottom_diag*8)+(left_top_diag*8)+left_left_diag))-1;
+
+            if (down>63||down<0||left_right_diag<left_right){
                 break;
             }
             // Looping corresponding index below it
@@ -223,7 +248,6 @@ public class one {
                 continue;
             }
             if(arrayLabels[down].col == Color.WHITE && status) {
-                System.out.println(8+" Final:" + arr8);
                 arr_final.addAll(arr8);
                 break;
             }
@@ -239,6 +263,10 @@ public class one {
         return arr_final;
     }
     public boolean validation(MyButton[] arrayLabels,int position){
+        int left_left_diag;
+        int left_top_diag;
+        int left_bottom_diag;
+        int left_right_diag;
         // Number of rows left below it
         double left_bottom = Math.floor((63-position)/8.0);
         // to go down
@@ -249,6 +277,9 @@ public class one {
         for(int i=0;i<left_bottom;i++){
             // Looping corresponding index below it
             down = down+8;
+            if (down>63||down<0){
+                break;
+            }
             // If below it, there's an opposite colour
             if(arrayLabels[down].col == Color.BLACK ) {
                 status = true;
@@ -324,10 +355,12 @@ public class one {
             // Looping corresponding index below it
             // If below it, there's an opposite colour
             if(arrayLabels[down].col == Color.BLACK ) {
+
                 status = true;
                 continue;
             }
             if(arrayLabels[down].col == null && status) {
+                System.out.println(4);
                 return true;
             }
             // If below piece is either not black or doesn't contain an element then break
@@ -337,17 +370,20 @@ public class one {
         }
         // Checks bottom-left Section
         status = false;
-        ArrayList<Integer> arr5 = new ArrayList<Integer>();
         down = position;
-        for(int i=0;i<left_left;i++){
-            down = down+7;
-            if (down>63||down<0){
+        for(int i=0;i<left_top;i++){
+            down = down-7;
+            left_bottom_diag = (int)Math.floor((63-down)/8.0);
+            left_top_diag = (int) (8-(left_bottom_diag+1));
+            left_left_diag = down-(left_top_diag*8);
+
+            // Checks to make sure not going out of bounds and edges
+            if (down>63||down<0||left_left_diag<left_left){
                 break;
             }
             // Looping corresponding index below it
             // If below it, there's an opposite colour
             if(arrayLabels[down].col == Color.BLACK ) {
-                arr5.add(down);
                 status = true;
                 continue;
             }
@@ -365,18 +401,24 @@ public class one {
         status = false;
         ArrayList<Integer> arr6 = new ArrayList<Integer>();
         down = position;
-        for(int i=0;i<left_top;i++){
-            down = down-9;
-            if (down>63||down<0){
+        for(int i=0;i<left_bottom;i++){
+            down = down+9;
+            left_bottom_diag = (int)Math.floor((63-down)/8.0);
+            left_top_diag = (int) (8-(left_bottom_diag+1));
+            left_left_diag = down-(left_top_diag*8);
+
+            if (down>63||down<0||left_left_diag<left_left){
                 break;
             }
             // Looping corresponding index below it
             // If below it, there's an opposite colour
             if(arrayLabels[down].col == Color.BLACK ) {
                 status = true;
+                System.out.println("Black: "+down);
                 continue;
             }
             if(arrayLabels[down].col == null && status) {
+                System.out.println("White: "+down);
                 return true;
             }
             // If below piece is either not black or doesn't contain an element then break
@@ -389,9 +431,15 @@ public class one {
         // Checks top-right Section
         status = false;
         down = position;
-        for(int i=0;i<left_top;i++){
-            down = down-7;
-            if (down>63||down<0){
+        for(int i=0;i<left_bottom;i++){
+            down = down+7;
+
+            left_bottom_diag = (int)Math.floor((63-down)/8.0);
+            left_top_diag = (int) (8-(left_bottom_diag+1));
+            left_left_diag = down-(left_top_diag*8);
+            left_right_diag = (int) (64-((left_bottom_diag*8)+(left_top_diag*8)+left_left_diag))-1;
+
+            if (down>63||down<0||left_right_diag<left_right){
                 break;
             }
             // Looping corresponding index below it
@@ -412,9 +460,15 @@ public class one {
         // Checks bottom-right Section
         status = false;
         down = position;
-        for(int i=0;i<left_right;i++){
-            down = down+9;
-            if (down>63||down<0){
+        for(int i=0;i<left_top;i++){
+            down = down-9;
+
+            left_bottom_diag = (int)Math.floor((63-down)/8.0);
+            left_top_diag = (int) (8-(left_bottom_diag+1));
+            left_left_diag = down-(left_top_diag*8);
+            left_right_diag = (int) (64-((left_bottom_diag*8)+(left_top_diag*8)+left_left_diag))-1;
+
+            if (down>63||down<0||left_right_diag<left_right) {
                 break;
             }
             // Looping corresponding index below it
@@ -433,13 +487,11 @@ public class one {
 
 
         }
-
         return false;
     }
     public static void main(String[] args){
 
     }
 }
-
 
 
