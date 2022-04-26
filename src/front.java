@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.print.DocFlavor;
@@ -67,7 +68,6 @@ public class front extends Thread{
             JOptionPane.showMessageDialog(first.visual,"Await your turn");
         }
         if (first.l1.getText() == " White player - click to put piece"&& !first.arrayLabels[finalI1].isClicked) {
-            System.out.println("This Version");
             // Checking to see if any more moves can be made:
             for (int val = 0; val < 64; val++) {
                 if(first.arrayLabels[val].col==Color.WHITE){
@@ -90,7 +90,6 @@ public class front extends Thread{
                 }
             }
             // if no moves left for first but some left for right, pass to black
-            System.out.println("White Switching: "+validation1 +" "+validation2);
             if (!validation1&&validation2){
                 first.l1.setText(" White player - not your turn");
                 second.l1.setText(" Black player - click to put piece");
@@ -131,7 +130,6 @@ public class front extends Thread{
                 second.arrayLabels[count].repaint();
                 count++;
             }
-            //System.out.println("White: "+first.validation+" Black: "+second.validation);
             // Checking to see if any more moves can be made:
             validation1 = false;
             validation2 = false;
@@ -243,7 +241,6 @@ public class front extends Thread{
                 });
 
             }
-            //System.out.println("White: "+first.validation+" Black: "+second.validation);
             // Checking to see if any moves can be made: FOR second player
             validation1 = false;
             validation2 = false;
@@ -289,6 +286,23 @@ public class front extends Thread{
     public void initalisation1(front first) {
         // Checking if new move can be made needs to be repositioned - I think both need to be in both first and second
         one check = new one();
+        // Test run
+        first.button.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<Integer> highest = new ArrayList<Integer>();
+                // Adding manually as setting size did not work
+                for (int i = 0; i < 64; i++) {highest.add(0);}
+                for (int i = 0; i < 64; i++) {
+                    if(arrayLabels[i].col!=Color.BLACK&&arrayLabels[i].col!=Color.WHITE){
+                        highest.set(i, (check.manipulate(first.arrayLabels, i).size()));
+                    }
+                }
+
+                first.place1(first, highest.indexOf(Collections.max(highest)), check);
+
+            }
+        });
         for (int i = 0; i < 64; i++) {
             int finalI1 = i;
             first.arrayLabels[i].addActionListener(new ActionListener() {
@@ -310,6 +324,21 @@ public class front extends Thread{
     public void initalisation2(front second){
         // Checking if new move can be made needs to be repositioned - I think both need to be in both first and second
         two check = new two();
+        second.button.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<Integer> highest = new ArrayList<Integer>();
+                // Adding manually as setting size did not work
+                for (int i = 0; i < 64; i++) {highest.add(0);}
+                for (int i = 0; i < 64; i++) {
+                    if(arrayLabels[i].col!=Color.BLACK&&arrayLabels[i].col!=Color.WHITE){
+                        highest.set(i, (check.manipulate(second.arrayLabels, i).size()));
+                    }
+                }
+                second.place2(second, highest.indexOf(Collections.max(highest)), check);
+
+            }
+        });
         for(int i = 0; i<64; i++){
             int finalI1 = i;
             second.arrayLabels[i].addActionListener(new ActionListener(){

@@ -360,7 +360,6 @@ public class one {
                 continue;
             }
             if(arrayLabels[down].col == null && status) {
-                System.out.println(4);
                 return true;
             }
             // If below piece is either not black or doesn't contain an element then break
@@ -414,11 +413,9 @@ public class one {
             // If below it, there's an opposite colour
             if(arrayLabels[down].col == Color.BLACK ) {
                 status = true;
-                System.out.println("Black: "+down);
                 continue;
             }
             if(arrayLabels[down].col == null && status) {
-                System.out.println("White: "+down);
                 return true;
             }
             // If below piece is either not black or doesn't contain an element then break
