@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
@@ -11,8 +14,6 @@ import javax.swing.*;
 public class front extends Thread{
     JFrame visual = new JFrame();
     JPanel panel = new JPanel();
-
-    // Declaring them as class attributes
     // Adding Label
     JLabel l1 = new JLabel("");
     // Adding Buttons
@@ -29,6 +30,37 @@ public class front extends Thread{
         visual.setTitle(title); // Name of Application
         visual.setVisible(true);
     }
+    public void restart(){
+        for(Frame f:Frame.getFrames() ){
+            f.dispose();
+        }
+
+        JFrame visual = new JFrame();
+        JPanel panel = new JPanel();
+        // Adding Label
+        JLabel l1 = new JLabel("");
+        // Adding Buttons
+        JButton button = new JButton();
+        MyButton [] arrayLabels = new MyButton[64];
+        String myText = "";
+        boolean validation1;
+        boolean validation2;
+        // issue maybe second not being static
+        first = new front("Reversi - white player");
+        second = new front("Reversi - black player");
+        // Creation of button
+        first.button = new JButton("Greedy AI (play white)");
+        second.button = new JButton("Greedy AI (play black)");
+        // Label telling user whether it is their turn
+        first.l1 = new JLabel(" White player - click to put piece");
+        second.l1 = new JLabel(" Black player - not your turn");
+
+        first.boxes();
+        second.boxes();
+
+        first.initalisation1(first);
+        second.initalisation2(second);
+    }
     public void boxes(){ // Creating GUI
         for(int i=0;i<64;i++){
             // Creating boxes, setting colour and size
@@ -43,8 +75,7 @@ public class front extends Thread{
         // Adding default circles
         arrayLabels[27].isClicked = true;
         arrayLabels[27].col = Color.WHITE;
-        arrayLabels[27].repaint();
-        arrayLabels[36].isClicked = true;
+        arrayLabels[27].repaint();        arrayLabels[36].isClicked = true;
         arrayLabels[36].col = Color.WHITE;
         arrayLabels[36].repaint();
         arrayLabels[28].isClicked = true;
@@ -167,7 +198,8 @@ public class front extends Thread{
                 if(white==black){
                     JOptionPane.showMessageDialog(second.visual,"Draw: "+black+":"+white);
                 }
-                System.exit(0);
+                // Restarting program
+                second.restart();
             }
 
         }
@@ -279,7 +311,9 @@ public class front extends Thread{
                 if(white==black){
                     JOptionPane.showMessageDialog(second.visual,"Draw: "+black+":"+white);
                 }
-                System.exit(0);
+                // Restarting program
+                first.restart();
+
             }
         }
     }
@@ -356,8 +390,6 @@ public class front extends Thread{
         }
     }
     public static void main(String args[]){
-        // Is it the players turn?
-        int state = 0;
         // Creation of button
         first.button = new JButton("Greedy AI (play white)");
         second.button = new JButton("Greedy AI (play black)");
@@ -409,22 +441,6 @@ class MyButton extends JButton
         }
     }
 }
-// Not your turn comes up at wrong time
-// Check if player can make move - Otherwise pass control to other player +
-// AI +
 
-
-/* Plan for checking if player can make a move:
-With position = index in arrayLabels (for player)
-Loop through each line for index, checking for white (or black).
-If status = true and end does not contain a colour, return true
- */
-
-/* Plan for AI:
-With position = index in arrayLabels (for player) that is NULL
-Calculate how many pieces can be captured using the if player can make move function
-Add position, and number of pieces it can capture into an array
-Fetch index of largest number -> Find corresponding index, then plot
- */
 
 
