@@ -73,17 +73,21 @@ public class front extends Thread{
         }
         l1.setBounds(50,50, 100,30);
         // Adding default circles
-        arrayLabels[27].isClicked = true;
-        arrayLabels[27].col = Color.WHITE;
-        arrayLabels[27].repaint();        arrayLabels[36].isClicked = true;
+        arrayLabels[36].isClicked = true;
         arrayLabels[36].col = Color.WHITE;
         arrayLabels[36].repaint();
-        arrayLabels[28].isClicked = true;
-        arrayLabels[28].col = Color.BLACK;
-        arrayLabels[28].repaint();
+
         arrayLabels[35].isClicked = true;
         arrayLabels[35].col = Color.BLACK;
         arrayLabels[35].repaint();
+
+        arrayLabels[27].isClicked = true;
+        arrayLabels[27].col = Color.WHITE;
+        arrayLabels[27].repaint();
+
+        arrayLabels[28].isClicked = true;
+        arrayLabels[28].col = Color.BLACK;
+        arrayLabels[28].repaint();
 
 
         button.setFont(new Font("Ariel", Font.BOLD, 60));
@@ -119,12 +123,6 @@ public class front extends Thread{
                         break;
                     }
                 }
-            }
-            // if no moves left for first but some left for right, pass to black
-            if (!validation1&&validation2){
-                first.l1.setText(" White player - not your turn");
-                second.l1.setText(" Black player - click to put piece");
-
             }
             // If they can, then check if pieces can be captured
             if (validation1) {
@@ -180,6 +178,19 @@ public class front extends Thread{
                     }
                 }
             }
+            // if no moves left for second but some left for first
+            if (validation1 && !validation2){
+                Thread t2 = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        first.l1.setText(" White player - click to put piece");
+                        second.l1.setText(" Black player - not your turn");
+
+                    }
+                });
+                t2.start();
+            }
+            // No moves for either
             if (!validation1&&!validation2){
                 int white = 0;
                 int black = 0;
@@ -261,18 +272,6 @@ public class front extends Thread{
                 first.arrayLabels[x2].repaint();
                 count++;
             }
-            // if no moves left for second but some left for first
-            if (validation1&&!validation2){
-                Thread t2 = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        first.l1.setText(" White player - click to put piece");
-                        second.l1.setText(" Black player - not your turn");
-
-                    }
-                });
-
-            }
             // Checking to see if any moves can be made: FOR second player
             validation1 = false;
             validation2 = false;
@@ -293,6 +292,19 @@ public class front extends Thread{
                     }
                 }
             }
+            // if no moves left for first but some left for right, pass to black
+            if (!validation1&&validation2){
+                Thread tl = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        first.l1.setText(" White player - not your turn");
+                        second.l1.setText(" Black player - click to put piece");
+
+                    }
+                });
+                tl.start();
+            }
+            // No moves
             if (!validation1&&!validation2){
                 int white = 0;
                 int black = 0;
