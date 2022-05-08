@@ -484,9 +484,7 @@ public class two {
 
         return false;
     }
-    public static void main(String[] args){
 
-    }
 }
 
 
